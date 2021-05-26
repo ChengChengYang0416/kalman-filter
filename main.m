@@ -29,6 +29,9 @@ noise = wgn(length(model.t), 2, -100);
 noise = noise';
 noise = 100*noise;
 
+% filter
+myFilter = my_filter;
+
 for i = 2:length(model.t)
     t_now = model.t(i);
     
@@ -52,6 +55,7 @@ for i = 2:length(model.t)
     elseif SELECT_W_WO_NOISE == WITH_NOISE
         model.states(1, i) = X_new(end, 1) + noise(1, i);
         model.states(2, i) = (model.states(1, i) - model.states(1, i-1))/dt;
+        model.states(2, i) = myFilter.first_order_lpf(model.states(2, i), model.states(2, i-1));
     end    
 end
 
