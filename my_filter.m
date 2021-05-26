@@ -30,6 +30,7 @@ classdef my_filter < handle
             P_predict = obj.A*obj.P*obj.A'+obj.Q;
             K = P_predict*obj.C'*(inv(obj.C*P_predict*obj.C'+obj.R));
             filtered = x_predict + K*(x_m - obj.C*x_predict);
+            obj.P = (1 - K*obj.C)*P_predict;
         end
     end
 end
