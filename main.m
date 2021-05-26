@@ -19,11 +19,19 @@ tra = zeros(2, length(model.t));
 % controller initilaization
 ctrl = controller;
 
+% generate noise
+noise = wgn(length(model.t), 2, -100);
+noise = noise';
+noise = 1000*noise;
+
 for i = 2:length(model.t)
     t_now = model.t(i);
     
     % 1-D trajectory
     tra(:, i) = traj.traj_generate(t_now);
+    
+    % states with noise
+    model.states(:, i-1) = model.states(:, i-1) + noise(:, i-1);
     
     % error
     e = model.states(1, i-1) - tra(1, i-1);
@@ -51,3 +59,8 @@ subplot(212)
 plot(model.t, model.states(2, :))
 hold on
 plot(model.t, tra(2, :))
+
+figure
+plot(model.t, noise(1, :))
+hold on
+plot(model.t, noise(2, :))
