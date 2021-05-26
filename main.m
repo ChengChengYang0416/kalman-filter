@@ -1,6 +1,11 @@
 % kalman filter
 close all;
 
+% whether to impose noise or not
+WITH_NOISE = 0;
+WITHOUT_NOISE = 1;
+SELECT_W_WO_NOISE = WITH_NOISE;
+
 % simulation time
 dt = 0.01;
 sim_t = 20;
@@ -41,9 +46,13 @@ for i = 2:length(model.t)
     X0 = model.states(:, i - 1);
     [T, X_new] = ode45(@(t, x) model.update_dynamics(t, x, u), [0, dt], X0, u);
     
-    % save the states
-    model.states(1, i) = X_new(end, 1) + noise(1, i);
-    model.states(2, i) = (model.states(1, i) - model.states(1, i-1))/dt;
+    if SELECT_W_WO_NOISE == WITHOUT_NOISE
+        model.states(1, i) = X_new(end, 1);
+        model.states(2, i) = (model.states(1, i) - model.states(1, i-1))/dt;
+    elseif SELECT_W_WO_NOISE == WITH_NOISE
+        model.states(1, i) = X_new(end, 1) + noise(1, i);
+        model.states(2, i) = (model.states(1, i) - model.states(1, i-1))/dt;
+    end    
 end
 
 figure
