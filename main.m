@@ -22,16 +22,13 @@ ctrl = controller;
 % generate noise
 noise = wgn(length(model.t), 2, -100);
 noise = noise';
-noise = 1000*noise;
+noise = 100*noise;
 
 for i = 2:length(model.t)
     t_now = model.t(i);
     
     % 1-D trajectory
     tra(:, i) = traj.traj_generate(t_now);
-    
-    % states with noise
-    model.states(:, i-1) = model.states(:, i-1) + noise(:, i-1);
     
     % error
     e = model.states(1, i-1) - tra(1, i-1);
@@ -45,8 +42,8 @@ for i = 2:length(model.t)
     [T, X_new] = ode45(@(t, x) model.update_dynamics(t, x, u), [0, dt], X0, u);
     
     % save the states
-    model.states(1, i) = X_new(end, 1);
-    model.states(2, i) = X_new(end, 2);
+    model.states(1, i) = X_new(end, 1) + noise(1, i);
+    model.states(2, i) = (model.states(1, i) - model.states(1, i-1))/dt;
 end
 
 figure
