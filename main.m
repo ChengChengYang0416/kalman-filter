@@ -73,18 +73,30 @@ for i = 2:length(model.t)
     end    
 end
 
+% plot the position and the velocity
 figure
 subplot(211)
 plot(model.t, model.states(1, :))
+y = ylabel('$X$', 'rotation', 0, 'Interpreter', 'latex');
+set(y, 'Units', 'Normalized', 'Position', [-0.09, 0.41])
 hold on
 plot(model.t, tra(1, :))
+legend('$X$', '$X_{d}$' , 'Interpreter', 'latex')
+title('$Position$ $(m)$', 'Interpreter', 'latex')
 
 subplot(212)
 plot(model.t, model.states(2, :))
+y = ylabel('$V$', 'rotation', 0, 'Interpreter', 'latex');
+set(y, 'Units', 'Normalized', 'Position', [-0.09, 0.41])
 hold on
 plot(model.t, tra(2, :))
+xlabel('$Time(sec)$', 'Interpreter', 'latex')
+legend('$V$', '$V_{d}$' , 'Interpreter', 'latex')
+title('$Velocity$ $(m/s)$', 'Interpreter', 'latex')
 
 figure
 plot(model.t, noise(1, :))
-hold on
-plot(model.t, noise(2, :))
+y = ylabel('$n_{x}$', 'rotation', 0, 'Interpreter', 'latex');
+set(y, 'Units', 'Normalized', 'Position', [-0.09, 0.41])
+xlabel('$Time(sec)$', 'Interpreter', 'latex')
+title('$Noise$ $of$ $Position$ $(m)$', 'Interpreter', 'latex')
