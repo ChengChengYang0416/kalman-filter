@@ -1,7 +1,7 @@
 classdef controller
     properties
-        kp = 3;
-        kd = 4;
+        kp = 20;
+        kd = 20;
     end
     methods
         function out = pd_controller(obj, e, e_dot)
