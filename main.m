@@ -53,7 +53,7 @@ for i = 2:length(model.t)
     control(i) = u;
     
     % dynamics
-    X0 = model.states(:, i - 1);
+    X0 = model.states(:, i-1);
     [T, X_new] = ode45(@(t, x) model.update_dynamics(t, x, u), [0, dt], X0, u);
     
     if SELECT_W_WO_NOISE == WITHOUT_NOISE
