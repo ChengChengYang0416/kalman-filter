@@ -9,6 +9,7 @@ SELECT_W_WO_NOISE = WITH_NOISE;
 % select filter
 USE_FIRST_ORDER_LPF = 0;
 USE_EKF = 1;
+USE_UKF = 2;
 SELECT_FILTER = USE_EKF;
 
 % simulation time
@@ -68,6 +69,9 @@ for i = 2:length(model.t)
             model.states(2, i) = myFilter.first_order_lpf(model.states(2, i), model.states(2, i-1));
         elseif SELECT_FILTER == USE_EKF
             filtered = myFilter.extended_kalman_filter(dt, model.states(1, i-1), model.states(2, i-1), control(i-1), model.states(1, i));
+            model.states(:, i) = filtered(1:2, 1);
+        elseif SELECT_FILTER == USE_UKF
+            filtered = myFilter.unscented_kalman_filter(dt, model.states(1, i-1), model.states(2, i-1), control(i-1), model.states(1, i));
             model.states(:, i) = filtered(1:2, 1);
         end
     end    
