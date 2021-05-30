@@ -59,26 +59,26 @@ classdef my_filter < handle
             obj.P = (1 - K*obj.C)*P_predict;
         end
         
-        function filtered = unscented_kalman_filter(obj, dt, x_last, v_last, u, x_m)
+        function filtered = unscented_kalman_filter(obj, dt, x_last, v_last, u_last, x_m)
             obj.lambda = obj.alpha_ukf^2*(obj.L+obj.kappa) - obj.L;
             obj.sigma_points_delta = sqrtm((obj.L+obj.lambda)*obj.P_ukf);
             obj.sigma_points_delta = obj.sigma_points_delta';
             obj.sigma_points = zeros(obj.L, 2*obj.L+1);
             
             % sigma points
-            obj.sigma_points(:, 1) = [x_last; v_last; u];
-            obj.sigma_points(:, 2) = [x_last; v_last; u] + obj.sigma_points_delta(:, 1);
-            obj.sigma_points(:, 3) = [x_last; v_last; u] + obj.sigma_points_delta(:, 2);
-            obj.sigma_points(:, 4) = [x_last; v_last; u] + obj.sigma_points_delta(:, 3);
-            obj.sigma_points(:, 5) = [x_last; v_last; u] - obj.sigma_points_delta(:, 1);
-            obj.sigma_points(:, 6) = [x_last; v_last; u] - obj.sigma_points_delta(:, 2);
-            obj.sigma_points(:, 7) = [x_last; v_last; u] - obj.sigma_points_delta(:, 3);
+            obj.sigma_points(:, 1) = [x_last; v_last; u_last];
+            obj.sigma_points(:, 2) = [x_last; v_last; u_last] + obj.sigma_points_delta(:, 1);
+            obj.sigma_points(:, 3) = [x_last; v_last; u_last] + obj.sigma_points_delta(:, 2);
+            obj.sigma_points(:, 4) = [x_last; v_last; u_last] + obj.sigma_points_delta(:, 3);
+            obj.sigma_points(:, 5) = [x_last; v_last; u_last] - obj.sigma_points_delta(:, 1);
+            obj.sigma_points(:, 6) = [x_last; v_last; u_last] - obj.sigma_points_delta(:, 2);
+            obj.sigma_points(:, 7) = [x_last; v_last; u_last] - obj.sigma_points_delta(:, 3);
             
             % sigma points through dynamics
             for i = 1:2*obj.L+1
                 obj.sigma_points_predict(1, i) = obj.sigma_points(1, i) + obj.sigma_points(2, i)*dt;
                 obj.sigma_points_predict(2, i) = obj.sigma_points(2, i) + obj.sigma_points(3, i)*dt;
-                obj.sigma_points_predict(3, i) = obj.sigma_points(3, i) + u;
+                obj.sigma_points_predict(3, i) = obj.sigma_points(3, i) + u_last;
             end
             
             % weight
