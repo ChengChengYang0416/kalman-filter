@@ -82,7 +82,6 @@ classdef my_filter < handle
             end
             
             % weight
-            obj.lambda = obj.alpha_ukf^2*(obj.L+obj.kappa)-obj.L;
             obj.weight_state_original = obj.L/(obj.L+obj.lambda);
             obj.weight_state = 1/(2*(obj.L+obj.lambda));
             obj.weight_covariance_original = obj.lambda/(obj.L+obj.lambda)+(1-obj.alpha_ukf^2+obj.beta);
